@@ -3,10 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float forwardSpeed = 5f; 
+    public float baseForwardSpeed = 5f;
+    public float slowMultiplier;
+    public float boostMultiplier;
     public float strafeSpeed = 4f;
 
     private CharacterController controller;
+
+    private float currentForwardSpeed;
 
     void Awake()
     {
@@ -18,23 +22,30 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update()
-    {
-        Vector3 forwardMovement = transform.forward * forwardSpeed * Time.deltaTime;
+{
+    bool slowingDown = Keyboard.current.sKey.isPressed;
+    bool speedingUp = Keyboard.current.wKey.isPressed;
 
-        float horizontalInput = 0f;
+    float speedFactor = 1f;
 
-        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-        {
-            horizontalInput = -1f;
-        }
-        else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-        {
-            horizontalInput = 1f;
-        }
+    if (slowingDown)
+        speedFactor = slowMultiplier;
+    else if (speedingUp)
+        speedFactor = boostMultiplier;
 
-        Vector3 strafeMovement = transform.right * horizontalInput * strafeSpeed * Time.deltaTime;
-        Vector3 totalMovement = forwardMovement + strafeMovement;
+    currentForwardSpeed = baseForwardSpeed * speedFactor;
 
-        controller.Move(totalMovement);
-    }
+    Vector3 forwardMovement = transform.forward * currentForwardSpeed * Time.deltaTime;
+
+    float horizontalInput = 0f;
+    if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
+        horizontalInput = -1f;
+    else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
+        horizontalInput = 1f;
+
+    Vector3 strafeMovement = transform.right * horizontalInput * strafeSpeed * Time.deltaTime;
+    Vector3 totalMovement = forwardMovement + strafeMovement;
+
+    controller.Move(totalMovement);
+}
 }
