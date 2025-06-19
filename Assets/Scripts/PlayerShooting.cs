@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -8,76 +9,54 @@ public class PlayerShooting : MonoBehaviour
 
     public LayerMask shootableLayers;
 
-    //public LineRenderer bulletTracer;
-    //public GameObject hitEffectPrefab;
-
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             Shoot();
         }
     }
 
+
     void Shoot()
     {
-        if (firePoint == null)
+        if (firePoint == null) return;
+
+        Ray cameraRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(cameraRay, out RaycastHit camHit, shootRange, shootableLayers))
         {
-            Debug.LogError("Fire Point not found.");
-            return;
-        }
-
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); 
-        
-        RaycastHit hit;
-
-        if (Physics.Raycast(firePoint.position, (ray.origin + ray.direction * shootRange) - firePoint.position, out hit, shootRange, shootableLayers))
-        {
-            Debug.Log("Igrač je pogodio: " + hit.collider.name + " na poziciji: " + hit.point + " (Layer: " + LayerMask.LayerToName(hit.collider.gameObject.layer) + ")");
-
-            /*// Visual trace
-            if (bulletTracer != null)
-            {
-                bulletTracer.SetPosition(0, firePoint.position);
-                bulletTracer.SetPosition(1, hit.point);
-                //StartCoroutine(ShowTracer(bulletTracer, 0.1f));
-            }
-
-            // Hit effect
-            if (hitEffectPrefab != null)
-            {
-                GameObject hitEffect = Instantiate(hitEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(hitEffect, 2f);
-            }*/
-/*
-            EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(20);
-            }
-            */
+            targetPoint = camHit.point;
         }
         else
         {
-            Debug.Log("Igrač je promašio! Ray je otišao do: " + (ray.origin + ray.direction * shootRange) + " (Nije pogodio ni jedan definisan sloj).");
+            targetPoint = cameraRay.origin + cameraRay.direction * shootRange;
+        }
 
-            /*// Visual trace to the end
-            if (bulletTracer != null)
+        Vector3 direction = (targetPoint - firePoint.position).normalized;
+
+        Debug.DrawRay(firePoint.position, direction * shootRange, Color.red, 2f);
+
+        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, shootRange, shootableLayers))
+        {
+            Debug.Log("Hit: " + hit.collider.name + " at " + hit.point);
+            if (hit.collider.tag == "Enemy")
             {
-                bulletTracer.SetPosition(0, firePoint.position);
-                bulletTracer.SetPosition(1, ray.origin + ray.direction * shootRange);
-                //StartCoroutine(ShowTracer(bulletTracer, 0.1f));
+                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+                if (enemy != null)
+                {
+                    int damage = Random.Range(35, 71);
+                    enemy.TakeDamage(damage);
+                    Debug.Log("Enemy took " + damage + " damage!");
+                }
             }
-            */
+        }
+        else
+        {
+            Debug.Log("Missed. Ray ended at: " + (firePoint.position + direction * shootRange));
         }
     }
 
-    /*
-    IEnumerator ShowTracer(LineRenderer tracer, float duration)
-    {
-        tracer.enabled = true;
-        yield return new WaitForSeconds(duration);
-        tracer.enabled = false;
-    }
-    */
 }
