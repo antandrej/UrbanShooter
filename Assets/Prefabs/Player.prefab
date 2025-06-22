@@ -310,6 +310,8 @@ MonoBehaviour:
   shootableLayers:
     serializedVersion: 2
     m_Bits: 960
+  maxAmmo: 9
+  currentAmmo: 0
 --- !u!1 &9159386182740535927
 GameObject:
   m_ObjectHideFlags: 0

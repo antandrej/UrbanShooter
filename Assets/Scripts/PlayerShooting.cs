@@ -1,13 +1,23 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
 {
     public Transform firePoint;
-
     public float shootRange = 100f;
-
     public LayerMask shootableLayers;
+
+    public float maxAmmo;
+    public float currentAmmo;
+    public Text ammoText;
+
+    void Start()
+    {
+        currentAmmo = maxAmmo;
+        UpdateAmmoText();
+    }
 
     void Update()
     {
@@ -17,10 +27,23 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
+    void UpdateAmmoText()
+    {
+        if (currentAmmo <= 0)
+        {
+            ammoText.text = "RELOADING";
+            StartCoroutine(Reload());
+        }
+        else
+        {
+            ammoText.text = currentAmmo + "/" + maxAmmo;
+        }
+    }
 
     void Shoot()
     {
         if (firePoint == null) return;
+        if (currentAmmo <= 0) return;
 
         Ray cameraRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -34,14 +57,11 @@ public class PlayerShooting : MonoBehaviour
         {
             targetPoint = cameraRay.origin + cameraRay.direction * shootRange;
         }
-
         Vector3 direction = (targetPoint - firePoint.position).normalized;
 
-        Debug.DrawRay(firePoint.position, direction * shootRange, Color.red, 2f);
 
         if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, shootRange, shootableLayers))
         {
-            Debug.Log("Hit: " + hit.collider.name + " at " + hit.point);
             if (hit.collider.tag == "Enemy")
             {
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
@@ -49,14 +69,22 @@ public class PlayerShooting : MonoBehaviour
                 {
                     int damage = Random.Range(35, 71);
                     enemy.TakeDamage(damage);
-                    Debug.Log("Enemy took " + damage + " damage!");
                 }
             }
         }
         else
         {
-            Debug.Log("Missed. Ray ended at: " + (firePoint.position + direction * shootRange));
+
         }
+
+        currentAmmo--;
+        UpdateAmmoText();
     }
 
+    IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(3);
+        currentAmmo = maxAmmo;
+        UpdateAmmoText();
+    }
 }
