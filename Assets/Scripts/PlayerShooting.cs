@@ -5,23 +5,31 @@ using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
 {
+    public float maxHealth = 100f;
+    public float currentHealth;
+
     public Transform firePoint;
     public float shootRange = 100f;
     public LayerMask shootableLayers;
 
     public float maxAmmo;
     public float currentAmmo;
+    public float reloadTime;
     public Text ammoText;
+
+    public bool isAlive;
 
     void Start()
     {
         currentAmmo = maxAmmo;
+        currentHealth = maxHealth;
+        isAlive = true;
         UpdateAmmoText();
     }
 
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame && isAlive)
         {
             Shoot();
         }
@@ -83,8 +91,24 @@ public class PlayerShooting : MonoBehaviour
 
     IEnumerator Reload()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         UpdateAmmoText();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+
+        if (currentHealth <= 0)
+            Die();
+    }
+
+    public void Die()
+    {
+        isAlive = false;
+        GetComponent<CharacterController>().enabled = false;
+        GetComponent<MeshRenderer>().enabled = false;
+        currentHealth = 0;
     }
 }

@@ -16,8 +16,11 @@ public class EnemyAI : MonoBehaviour
 
     private float shootTimer = 0f;
 
+    private PlayerShooting isAlive;
+
     void Start()
     {
+        isAlive = player.GetComponent<PlayerShooting>();
         currentHealth = maxHealth;
     }
 
@@ -34,7 +37,7 @@ public class EnemyAI : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= fireRange && shootTimer >= Random.Range(shootCooldown, shootCooldown+3) && CanSeePlayer())
+        if (distance <= fireRange && shootTimer >= Random.Range(shootCooldown, shootCooldown+3) && CanSeePlayer() && isAlive.isAlive)
         {
             ShootAtPlayer(distance);
             shootTimer = 0f;
@@ -70,7 +73,12 @@ public class EnemyAI : MonoBehaviour
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player hit!" + gameObject.name);
-                // TODO: Apply damage
+                PlayerShooting player = hit.collider.GetComponent<PlayerShooting>();
+                if (player != null)
+                {
+                    int damage = Random.Range(35, 45);
+                    player.TakeDamage(damage);
+                }
             }
             else
             {

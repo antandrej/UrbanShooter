@@ -23,9 +23,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 slideStart;
     private Vector3 slideEnd;
 
+    private PlayerShooting isAlive;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        isAlive = GetComponent<PlayerShooting>();
         if (controller == null)
         {
             Debug.LogError("CharacterController not found.");
@@ -34,59 +37,62 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (isSliding)
+        if (isAlive.isAlive)
         {
-            slideTimer += Time.deltaTime;
-            float t = slideTimer / slideDuration;
-
-            if (t >= 1f)
+            if (isSliding)
             {
-                controller.Move(slideEnd - transform.position + Vector3.down * 0.1f);
-                isSliding = false;
+                slideTimer += Time.deltaTime;
+                float t = slideTimer / slideDuration;
+
+                if (t >= 1f)
+                {
+                    controller.Move(slideEnd - transform.position + Vector3.down * 0.1f);
+                    isSliding = false;
+                }
+                else
+                {
+                    Vector3 flatMove = Vector3.Lerp(slideStart, slideEnd, t);
+                    float height = Mathf.Sin(t * Mathf.PI) * slideHeight;
+                    flatMove.y += height;
+
+                    Vector3 delta = flatMove - transform.position;
+                    controller.Move(delta);
+                }
+
+                return;
             }
+
+            bool slowingDown = Keyboard.current.sKey.isPressed;
+            bool speedingUp = Keyboard.current.wKey.isPressed;
+
+            float speedFactor = 1f;
+            if (slowingDown) speedFactor = slowMultiplier;
+            else if (speedingUp) speedFactor = boostMultiplier;
+
+            currentForwardSpeed = baseForwardSpeed * speedFactor;
+
+            float horizontalInput = 0f;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
+                horizontalInput = -1f;
+            else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
+                horizontalInput = 1f;
+
+            Vector3 move = transform.forward * currentForwardSpeed + transform.right * horizontalInput * strafeSpeed;
+
+            if (!controller.isGrounded)
+                verticalVelocity.y += gravity * Time.deltaTime;
             else
-            {
-                Vector3 flatMove = Vector3.Lerp(slideStart, slideEnd, t);
-                float height = Mathf.Sin(t * Mathf.PI) * slideHeight;
-                flatMove.y += height;
+                verticalVelocity.y = -1f;
 
-                Vector3 delta = flatMove - transform.position;
-                controller.Move(delta);
-            }
+            move += verticalVelocity;
 
-            return;
+            controller.Move(move * Time.deltaTime);
         }
-
-        bool slowingDown = Keyboard.current.sKey.isPressed;
-        bool speedingUp = Keyboard.current.wKey.isPressed;
-
-        float speedFactor = 1f;
-        if (slowingDown) speedFactor = slowMultiplier;
-        else if (speedingUp) speedFactor = boostMultiplier;
-
-        currentForwardSpeed = baseForwardSpeed * speedFactor;
-
-        float horizontalInput = 0f;
-        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-            horizontalInput = -1f;
-        else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-            horizontalInput = 1f;
-
-        Vector3 move = transform.forward * currentForwardSpeed + transform.right * horizontalInput * strafeSpeed;
-
-        if (!controller.isGrounded)
-            verticalVelocity.y += gravity * Time.deltaTime;
-        else
-            verticalVelocity.y = -1f;
-
-        move += verticalVelocity;
-
-        controller.Move(move * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Obstacle") && !isSliding)
+        if (other.CompareTag("Obstacle") && !isSliding && isAlive.isAlive)
         {
             slideStart = transform.position;
             float adjustedHeight = 2f;
