@@ -110,5 +110,6 @@ public class PlayerShooting : MonoBehaviour
         GetComponent<CharacterController>().enabled = false;
         GetComponent<MeshRenderer>().enabled = false;
         currentHealth = 0;
+        FindObjectOfType<GameManager>()?.TriggerGameOver();
     }
 }

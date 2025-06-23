@@ -158,9 +158,9 @@ MonoBehaviour:
   player: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
-  shootCooldown: 2
+  shootCooldown: 1
   fireRange: 30
-  baseInaccuracyDegrees: 7.5
+  baseInaccuracyDegrees: 6.5
   firePoint: {fileID: 7962594279777294180}
   sightLayers:
     serializedVersion: 2

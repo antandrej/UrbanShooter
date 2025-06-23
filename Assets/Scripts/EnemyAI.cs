@@ -7,7 +7,7 @@ public class EnemyAI : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
-    public float shootCooldown = 2f;
+    public float shootCooldown = 1f;
     public float fireRange = 35f;
     public float baseInaccuracyDegrees = 2f;
 
@@ -72,7 +72,6 @@ public class EnemyAI : MonoBehaviour
         {
             if (hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Player hit!" + gameObject.name);
                 PlayerShooting player = hit.collider.GetComponent<PlayerShooting>();
                 if (player != null)
                 {
@@ -82,7 +81,6 @@ public class EnemyAI : MonoBehaviour
             }
             else
             {
-                Debug.Log("Missed — hit " + hit.collider.name);
                 // TODO: Impact feedback
             }
         }
