@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class CrosshairController : MonoBehaviour
 {
     private RectTransform crosshairRect;
+    public static Vector2 ScreenPosition { get; private set; }
 
     void Start()
     {
@@ -15,8 +16,9 @@ public class CrosshairController : MonoBehaviour
     void Update()
     {
         Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Vector2 localPoint;
+        ScreenPosition = mousePosition;
 
+        Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             crosshairRect.parent as RectTransform, 
             mousePosition, 
