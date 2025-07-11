@@ -90,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public bool IsSliding => isSliding;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstacle") && !isSliding && isAlive.isAlive)
