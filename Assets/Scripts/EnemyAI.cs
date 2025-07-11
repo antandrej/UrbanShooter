@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class EnemyAI : MonoBehaviour
     private float shootTimer = 0f;
 
     private PlayerShooting isAlive;
-
     void Start()
     {
         isAlive = player.GetComponent<PlayerShooting>();
@@ -37,7 +37,7 @@ public class EnemyAI : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= fireRange && shootTimer >= Random.Range(shootCooldown, shootCooldown+3) && CanSeePlayer() && isAlive.isAlive)
+        if (distance <= fireRange && shootTimer >= Random.Range(shootCooldown, shootCooldown + 3) && CanSeePlayer() && isAlive.isAlive)
         {
             ShootAtPlayer(distance);
             shootTimer = 0f;
@@ -94,7 +94,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     public void Die()
+{
+    GameManager gm = FindObjectOfType<GameManager>();
+    if (gm != null)
     {
-        Destroy(this.gameObject);
+        gm.RegisterKill();
     }
+
+    Destroy(this.gameObject);
+}
 }

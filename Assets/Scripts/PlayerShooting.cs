@@ -19,6 +19,9 @@ public class PlayerShooting : MonoBehaviour
 
     public bool isAlive;
 
+    public float elapsedTime = 0f;
+public bool finalTimeSet = false;
+
     void Start()
     {
         currentAmmo = maxAmmo;
@@ -29,6 +32,9 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
+        if(isAlive)
+            elapsedTime += Time.deltaTime;
+            
         if (Mouse.current.leftButton.wasPressedThisFrame && isAlive)
         {
             Shoot();
