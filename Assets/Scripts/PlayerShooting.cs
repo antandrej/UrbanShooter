@@ -32,20 +32,26 @@ public bool finalTimeSet = false;
 
     void Update()
     {
-        if(isAlive)
+        if (isAlive)
+        {
             elapsedTime += Time.deltaTime;
+            if (Keyboard.current.rKey.isPressed)
+            {
+                currentAmmo = 0;
+                UpdateAmmoText();
+            }
+        }
             
         if (Mouse.current.leftButton.wasPressedThisFrame && isAlive)
-        {
-            Shoot();
-        }
+            {
+                Shoot();
+            }
     }
 
     void UpdateAmmoText()
     {
         if (currentAmmo <= 0)
         {
-            ammoText.text = "RELOADING";
             StartCoroutine(Reload());
         }
         else
@@ -97,6 +103,7 @@ public bool finalTimeSet = false;
 
     IEnumerator Reload()
     {
+        ammoText.text = "RELOADING";
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         UpdateAmmoText();
