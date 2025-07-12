@@ -2757,17 +2757,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33c7605361ea58743a0dc5692b9f0a8a, type: 3}
---- !u!114 &1639127849 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3116999103645221912, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
-  m_PrefabInstance: {fileID: 2084921420421403241}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e9b65af2f99a6649aac872b1e37e404, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1709147023
 GameObject:
   m_ObjectHideFlags: 0
@@ -3354,7 +3343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 73741542696476825, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 34.48
       objectReference: {fileID: 0}
     - target: {fileID: 73741542696476825, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3384,18 +3373,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5387871192466743720, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
-      propertyPath: playerMovement
-      value: 
-      objectReference: {fileID: 1639127849}
-    - target: {fileID: 5387871192466743720, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
-      propertyPath: slideRollSpeed
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387871192466743720, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
-      propertyPath: slideRollAmount
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 7558296134365007671, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3404,10 +3381,6 @@ PrefabInstance:
       propertyPath: ammoText
       value: 
       objectReference: {fileID: 1310710042}
-    - target: {fileID: 7875987586228242512, guid: a6ec4067fa2ed2e4cbd5ff8472ee4724, type: 3}
-      propertyPath: maxHealth
-      value: 100
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
