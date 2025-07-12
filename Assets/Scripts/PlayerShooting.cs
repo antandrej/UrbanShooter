@@ -20,7 +20,11 @@ public class PlayerShooting : MonoBehaviour
     public bool isAlive;
 
     public float elapsedTime = 0f;
-public bool finalTimeSet = false;
+    public bool finalTimeSet = false;
+
+    public float baseInaccuracy = 2f;
+    public float movementInaccuracy = 4f;
+    public float aimInaccuracy = 1f;
 
     void Start()
     {
@@ -41,11 +45,11 @@ public bool finalTimeSet = false;
                 UpdateAmmoText();
             }
         }
-            
+
         if (Mouse.current.leftButton.wasPressedThisFrame && isAlive)
-            {
-                Shoot();
-            }
+        {
+            Shoot();
+        }
     }
 
     void UpdateAmmoText()
@@ -79,11 +83,27 @@ public bool finalTimeSet = false;
         }
         Vector3 direction = (targetPoint - firePoint.position).normalized;
 
+        float finalInaccuracy = baseInaccuracy;
 
-        if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, shootRange, shootableLayers))
+        if (!Mouse.current.rightButton.isPressed)
+            finalInaccuracy += movementInaccuracy;
+        else
+            finalInaccuracy -= aimInaccuracy;
+
+        Quaternion spreadRot = Quaternion.Euler(
+            Random.Range(-finalInaccuracy, finalInaccuracy),
+            Random.Range(-finalInaccuracy, finalInaccuracy),
+            0f
+        );
+        Vector3 inaccurateDir = spreadRot * direction;
+        Debug.DrawRay(firePoint.position, inaccurateDir * shootRange, Color.yellow, 1.5f);
+
+
+        if (Physics.Raycast(firePoint.position, inaccurateDir, out RaycastHit hit, shootRange, shootableLayers))
         {
-            if (hit.collider.tag == "Enemy")
+            if (hit.collider.CompareTag("Enemy"))
             {
+                Debug.Log("hit");
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
                 if (enemy != null)
                 {

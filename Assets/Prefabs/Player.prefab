@@ -157,12 +157,14 @@ MonoBehaviour:
   defaultFOV: 60
   aimFOV: 45
   fovSmoothness: 15
+  slowFOV: 57.5
+  speedFOV: 62.5
   rotationInfluence: 7
   rotationSpeed: 10
   deadZoneRadius: 0.25
   playerMovement: {fileID: 3116999103645221912}
-  slideRollAmount: 8
-  slideRollSpeed: 7
+  slideRollAmount: 8.5
+  slideRollSpeed: 9
 --- !u!1 &7558296134365007671
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +351,9 @@ MonoBehaviour:
   isAlive: 0
   elapsedTime: 0
   finalTimeSet: 0
+  baseInaccuracy: 0.9
+  movementInaccuracy: 1.45
+  aimInaccuracy: 0.35
 --- !u!1 &9010751366570018930
 GameObject:
   m_ObjectHideFlags: 0

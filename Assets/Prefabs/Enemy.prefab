@@ -160,7 +160,7 @@ MonoBehaviour:
   currentHealth: 0
   shootCooldown: 1
   fireRange: 30
-  baseInaccuracyDegrees: 6.5
+  baseInaccuracyDegrees: 7
   firePoint: {fileID: 7962594279777294180}
   sightLayers:
     serializedVersion: 2
