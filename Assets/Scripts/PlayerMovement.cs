@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
     private float currentForwardSpeed;
     private Vector3 verticalVelocity = Vector3.zero;
 
+    bool slowingDown = false;
+    bool speedingUp = false;
+
     private bool isSliding = false;
     private float slideTimer = 0f;
     private Vector3 slideStart;
@@ -61,13 +64,15 @@ public class PlayerMovement : MonoBehaviour
 
                 return;
             }
-
-            bool slowingDown = Keyboard.current.sKey.isPressed;
-            bool speedingUp = Keyboard.current.wKey.isPressed;
-
             float speedFactor = 1f;
-            if (slowingDown) speedFactor = slowMultiplier;
-            else if (speedingUp) speedFactor = boostMultiplier;
+            if (!Mouse.current.rightButton.isPressed)
+            {
+                slowingDown = Keyboard.current.sKey.isPressed;
+                speedingUp = Keyboard.current.wKey.isPressed;
+
+                if (slowingDown) speedFactor = slowMultiplier;
+                else if (speedingUp) speedFactor = boostMultiplier;
+            }
 
             currentForwardSpeed = baseForwardSpeed * speedFactor;
 
@@ -90,7 +95,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public bool IsSliding => isSliding;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstacle") && !isSliding && isAlive.isAlive)
@@ -109,4 +113,8 @@ public class PlayerMovement : MonoBehaviour
             isSliding = true;
         }
     }
+
+    public bool IsSliding => isSliding;
+    public bool SlowingDown => slowingDown;
+    public bool SpeedingUp => speedingUp;
 }

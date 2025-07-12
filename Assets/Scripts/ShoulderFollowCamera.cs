@@ -16,6 +16,8 @@ public class ShoulderFollowCamera : MonoBehaviour
     public float defaultFOV = 60f;
     public float aimFOV = 45f;
     public float fovSmoothness = 10f;
+    public float slowFOV = 57.5f;
+    public float speedFOV = 62.5f;
 
     [Header("Rotation Settings")]
     public float rotationInfluence = 0.5f;
@@ -67,14 +69,17 @@ public class ShoulderFollowCamera : MonoBehaviour
         Quaternion targetRot = Quaternion.LookRotation(lookTarget - transform.position, Vector3.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
 
-        // Apply slide-based Z-axis roll
         float targetRoll = (playerMovement != null && playerMovement.IsSliding) ? slideRollAmount : 0f;
         currentRollZ = Mathf.Lerp(currentRollZ, targetRoll, Time.deltaTime * slideRollSpeed);
 
-        // Combine roll with rotation
         Quaternion rollRotation = Quaternion.Euler(0f, 0f, currentRollZ);
         transform.rotation = targetRot * rollRotation;
 
+        if (playerMovement.SlowingDown)
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, slowFOV, Time.deltaTime * fovSmoothness);
+
+        if (playerMovement.SpeedingUp)
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, speedFOV, Time.deltaTime * fovSmoothness);
 
         float targetFOV = isAiming ? aimFOV : defaultFOV;
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFOV, Time.deltaTime * fovSmoothness);

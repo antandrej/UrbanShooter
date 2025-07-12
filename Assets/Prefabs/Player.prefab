@@ -160,6 +160,9 @@ MonoBehaviour:
   rotationInfluence: 7
   rotationSpeed: 10
   deadZoneRadius: 0.25
+  playerMovement: {fileID: 3116999103645221912}
+  slideRollAmount: 8
+  slideRollSpeed: 7
 --- !u!1 &7558296134365007671
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e63e51d3de018fa4a9efc87773f18d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 800
+  maxHealth: 100
   currentHealth: 0
   firePoint: {fileID: 6319327398622503501}
   shootRange: 100
@@ -344,6 +347,8 @@ MonoBehaviour:
   reloadTime: 2
   ammoText: {fileID: 0}
   isAlive: 0
+  elapsedTime: 0
+  finalTimeSet: 0
 --- !u!1 &9010751366570018930
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +362,7 @@ GameObject:
   - component: {fileID: 9113024525994489371}
   - component: {fileID: 7250112010079946855}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
