@@ -163,8 +163,8 @@ MonoBehaviour:
   rotationSpeed: 10
   deadZoneRadius: 0.25
   playerMovement: {fileID: 3116999103645221912}
-  slideRollAmount: 8.5
-  slideRollSpeed: 9
+  slideRollAmount: 8
+  slideRollSpeed: 12
 --- !u!1 &7558296134365007671
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,9 +296,9 @@ MonoBehaviour:
   slowMultiplier: 0.6
   boostMultiplier: 1.3
   strafeSpeed: 3.5
-  slideDuration: 0.6
-  slideHeight: 1.2
-  slideDistance: 2
+  slideDuration: 0.4
+  slideHeight: 1.3
+  slideDistance: 2.2
   gravity: -9.81
 --- !u!143 &4203157572400934427
 CharacterController:
